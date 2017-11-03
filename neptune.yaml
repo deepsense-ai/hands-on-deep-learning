@@ -4,7 +4,7 @@ command: main.py
 
 name: CIFAR10 with DL
 description: From blog post.
-tags: [logistic-regression]
+tags: [mlp]
 
 # environment: keras-2.0-gpu
 # worker: gcp-gpu-medium

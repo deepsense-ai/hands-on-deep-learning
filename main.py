@@ -87,9 +87,16 @@ ctx = neptune.Context()
 # create neural network architecture
 model = Sequential()
 
+#
+# model.add(Flatten(input_shape=(32, 32, 3)))
+# model.add(Dense(10))
+# model.add(Activation('softmax'))
+
 model.add(Flatten(input_shape=(32, 32, 3)))
+model.add(Dense(20, activation='sigmoid'))
 model.add(Dense(10))
 model.add(Activation('softmax'))
+
 
 model.compile(optimizer='rmsprop',
               loss='categorical_crossentropy',
@@ -97,7 +104,7 @@ model.compile(optimizer='rmsprop',
 
 # training
 model.fit(x_train, y_train,
-          epochs=10,
+          epochs=20,
           batch_size=32,
           validation_data=(x_test, y_test),
           verbose=2,
