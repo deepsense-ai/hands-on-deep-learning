@@ -13,7 +13,7 @@ from deepsense import neptune
 
 def array_2d_to_image(array, autorescale=True):
     assert array.min() >= 0
-    assert len(array.shape) == 2
+    assert len(array.shape) in [2, 3]
     if array.max() <= 1 and autorescale:
         array = 255 * array
     array = array.astype('uint8')
@@ -51,7 +51,7 @@ class NeptuneCallback(Callback):
                     description="\n".join([
                         "{:5.1f}% {} {}".format(100 * score, categories[i], "!!!" if i == actual else "")
                         for i, score in enumerate(scores[index])]),
-                    data=array_2d_to_image(x_test[index,:,:,0])))
+                    data=array_2d_to_image(x_test[index,:,:])))
 
 
 data = h5py.File("/input/cifar10.h5", 'r')
