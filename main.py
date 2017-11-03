@@ -1,6 +1,6 @@
 import h5py
 import numpy as np
-from keras.utils import np_utils
+from keras import utils
 from PIL import Image
 
 from keras.models import Sequential
