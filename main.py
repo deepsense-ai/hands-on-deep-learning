@@ -35,12 +35,12 @@ class NeptuneCallback(Callback):
         ctx.job.channel_send('Accuracy validation', self.epoch_id, logs['val_acc'])
 
         # Predict the digits for images of the test set.
-        validation_predictions = model.predict_classes(X_test)
-        scores = model.predict(X_test)
+        validation_predictions = model.predict_classes(x_test)
+        scores = model.predict(x_test)
 
         # Identify the incorrectly classified images and send them to Neptune Dashboard.
         image_per_epoch = 0
-        for index, (prediction, actual) in enumerate(zip(validation_predictions, Y_test.argmax(axis=1))):
+        for index, (prediction, actual) in enumerate(zip(validation_predictions, y_test.argmax(axis=1))):
             if prediction != actual:
                 if image_per_epoch == self.images_per_epoch:
                     break
@@ -49,12 +49,12 @@ class NeptuneCallback(Callback):
                 ctx.job.channel_send('false_predictions', neptune.Image(
                     name='[{}] pred: {} true: {}'.format(self.epoch_id, categories[prediction], categories[actual]),
                     description="\n".join([
-                        "{} {:5.1f}% {}".format(letters[i], 100 * score, "!!!" if i == actual else "")
+                        "{:5.1f}% {} {}".format(100 * score, categories[i], "!!!" if i == actual else "")
                         for i, score in enumerate(scores[index])]),
-                    data=array_2d_to_image(X_test[index,:,:,0])))
+                    data=array_2d_to_image(x_test[index,:,:,0])))
 
 
-data = h5py.File("../input/cifar10.h5", 'r')
+data = h5py.File("/input/cifar10.h5", 'r')
 x_train = data['x_train'].value
 y_train = data['y_train'].value
 x_test = data['x_test'].value
@@ -96,9 +96,9 @@ model.compile(optimizer='rmsprop',
               metrics=['accuracy'])
 
 # training
-model.fit(x_train, x_train,
+model.fit(x_train, y_train,
           epochs=10,
           batch_size=32,
-          validation_data=(X_test, x_test),
+          validation_data=(x_test, y_test),
           verbose=2,
           callbacks=[NeptuneCallback(images_per_epoch=20)])

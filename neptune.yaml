@@ -6,6 +6,6 @@ name: CIFAR10 with DL
 description: From blog post.
 tags: [logistic-regression]
 
-environment: keras-2.0-gpu
-worker: gcp-gpu-medium
-input: cifar10.h5
+# environment: keras-2.0-gpu
+# worker: gcp-gpu-medium
+# input: cifar10.h5
