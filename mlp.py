@@ -23,12 +23,14 @@ x_test /= 255
 y_train = utils.to_categorical(y_train, 10)
 y_test = utils.to_categorical(y_test, 10)
 
-ctx.job.tags.append('logistic-regression')
+ctx.job.tags.append('mlp')
 
 # create neural network architecture
 model = Sequential()
 
 model.add(Flatten(input_shape=(32, 32, 3)))
+model.add(Dense(20, activation='sigmoid'))
+model.add(Dense(20, activation='sigmoid'))
 model.add(Dense(10))
 model.add(Activation('softmax'))
 
