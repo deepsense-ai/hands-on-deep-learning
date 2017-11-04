@@ -1,6 +1,5 @@
 import h5py
 from keras import utils
-import keras
 
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Flatten
@@ -28,35 +27,43 @@ ctx.job.tags.append('cnn')
 
 # create neural network architecture
 model = Sequential()
-
-model.add(Conv2D(32, (3, 3), activation='relu', padding='same',
-                 input_shape=(32, 32, 3)))
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Conv2D(48, (3, 3), padding='same', input_shape=(32, 32, 3)))
+model.add(Activation('relu'))
+model.add(Conv2D(48, (3, 3)))
+model.add(Activation('relu'))
 model.add(MaxPool2D())
 model.add(Dropout(0.25))
-
-model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(96, (3, 3), padding='same'))
+model.add(Activation('relu'))
+model.add(Conv2D(96, (3, 3)))
+model.add(Activation('relu'))
 model.add(MaxPool2D())
 model.add(Dropout(0.25))
-
+model.add(Conv2D(192, (3, 3), padding='same'))
+model.add(Activation('relu'))
+model.add(Conv2D(192, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPool2D())
+model.add(Dropout(0.25))
 model.add(Flatten())
-model.add(Dense(512, activation='relu'))
+model.add(Dense(512))
+model.add(Activation('relu'))
 model.add(Dropout(0.5))
-model.add(Dense(10))
-model.add(Activation('softmax'))
+model.add(Dense(256))
+model.add(Activation('relu'))
+model.add(Dropout(0.5))
+model.add(Dense(10, activation='softmax'))
 
-# initiate RMSprop optimizer
-opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-model.compile(optimizer=opt,
+model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 # training
 model.fit(x_train, y_train,
           epochs=200,
-          batch_size=32,
+          batch_size=128,
           validation_data=(x_test, y_test),
           verbose=2,
           callbacks=[NeptuneCallback(x_test, y_test, images_per_epoch=20)])

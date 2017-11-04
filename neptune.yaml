@@ -3,7 +3,3 @@ project-key: CIF
 name: CIFAR10 with DL
 description: From blog post.
 tags: [cifar10]
-
-# environment: keras-2.0-gpu
-# worker: gcp-gpu-medium
-# input: cifar10.h5
