@@ -25,6 +25,7 @@ y_train = utils.to_categorical(y_train, 10)
 y_test = utils.to_categorical(y_test, 10)
 
 ctx.job.tags.append('cnn')
+ctx.job.tags.append('realistic')
 
 # create neural network architecture
 model = Sequential()

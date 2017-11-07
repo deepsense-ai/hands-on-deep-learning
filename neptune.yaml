@@ -3,3 +3,7 @@ project-key: CIF
 name: CIFAR10 with DL
 description: From blog post.
 tags: [cifar10]
+
+exclude:
+  - images
+  - aux
