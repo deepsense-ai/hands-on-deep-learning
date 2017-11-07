@@ -29,15 +29,12 @@ ctx.job.tags.append('mlp')
 model = Sequential()
 
 model.add(Flatten(input_shape=(32, 32, 3)))
-model.add(Dense(20, activation='sigmoid'))
-model.add(Dense(100, activation='sigmoid'))
+model.add(Dense(128, activation='sigmoid'))
+model.add(Dense(128, activation='sigmoid'))
 model.add(Dense(10))
 model.add(Activation('softmax'))
 
-from keras_sequential_ascii import sequential_model_to_ascii_printout
-sequential_model_to_ascii_printout(model)
-
-model.compile(optimizer='rmsprop',
+model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
