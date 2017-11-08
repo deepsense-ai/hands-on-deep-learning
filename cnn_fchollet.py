@@ -25,9 +25,12 @@ y_train = utils.to_categorical(y_train, 10)
 y_test = utils.to_categorical(y_test, 10)
 
 ctx.job.tags.append('cnn')
-ctx.job.tags.append('realistic')
+ctx.job.tags.append('fchollet')
 
 # create neural network architecture
+
+# adapted from: https://github.com/fchollet/keras/blame/master/examples/cifar10_cnn.py
+
 model = Sequential()
 
 model.add(Conv2D(32, (3, 3), activation='relu', padding='same',

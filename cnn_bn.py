@@ -3,7 +3,7 @@ from keras import utils
 
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Flatten
-from keras.layers import Conv2D, MaxPool2D, Dropout
+from keras.layers import Conv2D, MaxPool2D, Dropout, BatchNormalization
 from helpers import NeptuneCallback
 from deepsense import neptune
 
@@ -24,7 +24,7 @@ y_train = utils.to_categorical(y_train, 10)
 y_test = utils.to_categorical(y_test, 10)
 
 ctx.job.tags.append('cnn')
-ctx.job.tags.append('my')
+ctx.job.tags.append('adv')
 
 # create neural network architecture
 model = Sequential()
@@ -33,16 +33,19 @@ model.add(Conv2D(32, (3, 3), activation='relu', padding='same',
                  input_shape=(32, 32, 3)))
 model.add(Conv2D(32, (1, 1), activation='relu'))
 model.add(MaxPool2D())
+model.add(BatchNormalization())
 model.add(Dropout(0.25))
 
 model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
 model.add(Conv2D(64, (1, 1), activation='relu'))
 model.add(MaxPool2D())
+model.add(BatchNormalization())
 model.add(Dropout(0.25))
 
 model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
 model.add(Conv2D(128, (1, 1), activation='relu'))
 model.add(MaxPool2D())
+model.add(BatchNormalization())
 model.add(Dropout(0.25))
 
 model.add(Flatten())
@@ -57,7 +60,7 @@ model.compile(optimizer='adam',
 
 # training
 model.fit(x_train, y_train,
-          epochs=200,
+          epochs=100,
           batch_size=128,
           validation_data=(x_test, y_test),
           verbose=2,
