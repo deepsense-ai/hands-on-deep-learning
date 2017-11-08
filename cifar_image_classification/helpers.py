@@ -1,9 +1,26 @@
+import h5py
+from keras import utils
 import numpy as np
 from PIL import Image
 from keras.callbacks import Callback
 from deepsense import neptune
 
-ctx = neptune.Context()
+def load_cifar10(filepath="/public/cifar/cifar10.h5"):
+    data = h5py.File(filepath, 'r')
+    x_train = data['x_train'].value
+    y_train = data['y_train'].value
+    x_test = data['x_test'].value
+    y_test = data['y_test'].value
+
+    x_train = x_train.astype('float32')
+    x_test = x_test.astype('float32')
+    x_train /= 255
+    x_test /= 255
+
+    y_train = utils.to_categorical(y_train, 10)
+    y_test = utils.to_categorical(y_test, 10)
+
+    return (x_train, y_train), (x_test, y_test)
 
 categories = [
     'airplane',
@@ -25,6 +42,7 @@ def array_2d_to_image(array, autorescale=True):
     array = array.astype('uint8')
     return Image.fromarray(array)
 
+ctx = neptune.Context()
 
 class NeptuneCallback(Callback):
     def __init__(self, x_test, y_test, images_per_epoch=-1):
