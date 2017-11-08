@@ -24,33 +24,35 @@ y_train = utils.to_categorical(y_train, 10)
 y_test = utils.to_categorical(y_test, 10)
 
 ctx.job.tags.append('cnn')
+ctx.job.tags.append('pkaur')
 
 # create neural network architecture
+
+# adapted from http://parneetk.github.io/blog/cnn-cifar10/,
+#with permission: https://twitter.com/_parneetkaur/status/928004636728090625
+
 model = Sequential()
-model.add(Conv2D(48, (3, 3), padding='same', input_shape=(32, 32, 3)))
-model.add(Activation('relu'))
-model.add(Conv2D(48, (3, 3)))
-model.add(Activation('relu'))
+
+model.add(Conv2D(48, (3, 3), activation='relu', padding='same',
+                 input_shape=(32, 32, 3)))
+model.add(Conv2D(48, (3, 3), activation='relu'))
 model.add(MaxPool2D())
 model.add(Dropout(0.25))
-model.add(Conv2D(96, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(96, (3, 3)))
-model.add(Activation('relu'))
+
+model.add(Conv2D(96, (3, 3), activation='relu', padding='same'))
+model.add(Conv2D(96, (3, 3), activation='relu'))
 model.add(MaxPool2D())
 model.add(Dropout(0.25))
-model.add(Conv2D(192, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(192, (3, 3)))
-model.add(Activation('relu'))
+
+model.add(Conv2D(192, (3, 3), activation='relu', padding='same'))
+model.add(Conv2D(192, (3, 3), activation='relu'))
 model.add(MaxPool2D())
 model.add(Dropout(0.25))
+
 model.add(Flatten())
-model.add(Dense(512))
-model.add(Activation('relu'))
+model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(256))
-model.add(Activation('relu'))
+model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(10, activation='softmax'))
 
