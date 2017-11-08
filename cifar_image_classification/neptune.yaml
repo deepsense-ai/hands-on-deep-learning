@@ -5,5 +5,4 @@ description: From blog post "Starting deep learning hands-on - image classificat
 tags: [cifar10]
 
 exclude:
-  - images
   - aux
