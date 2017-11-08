@@ -2,7 +2,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation, Flatten
 from keras.layers import Conv2D, MaxPool2D, Dropout
 from keras import optimizers
-from helpers import NeptuneCallback, load_cifar10
+from helpers import NeptuneCallback, load_cifar10, model_summary
 from deepsense import neptune
 
 ctx = neptune.Context()
@@ -38,6 +38,8 @@ opt = optimizers.rmsprop(lr=0.0001, decay=1e-6)
 model.compile(optimizer=opt,
               loss='categorical_crossentropy',
               metrics=['accuracy'])
+
+model_summary(model)
 
 # loading data
 (x_train, y_train), (x_test, y_test) = load_cifar10()

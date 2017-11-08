@@ -20,7 +20,24 @@ def load_cifar10(filepath="/public/cifar/cifar10.h5"):
     y_train = utils.to_categorical(y_train, 10)
     y_test = utils.to_categorical(y_test, 10)
 
+    print("CIFAR-10 data loaded from {}.".format(filepath))
+
     return (x_train, y_train), (x_test, y_test)
+
+ctx = neptune.Context()
+
+def array_2d_to_image(array, autorescale=True):
+    assert array.min() >= 0
+    assert len(array.shape) in [2, 3]
+    if array.max() <= 1 and autorescale:
+        array = 255 * array
+    array = array.astype('uint8')
+    return Image.fromarray(array)
+
+def model_summary(model):
+    print(model.summary())
+    ctx.job.channel_send('n_layers', len(model.layers))
+    ctx.job.channel_send('n_parameters', model.count_params())
 
 categories = [
     'airplane',
@@ -33,16 +50,6 @@ categories = [
     'horse',
     'ship',
     'truck']
-
-def array_2d_to_image(array, autorescale=True):
-    assert array.min() >= 0
-    assert len(array.shape) in [2, 3]
-    if array.max() <= 1 and autorescale:
-        array = 255 * array
-    array = array.astype('uint8')
-    return Image.fromarray(array)
-
-ctx = neptune.Context()
 
 class NeptuneCallback(Callback):
     def __init__(self, x_test, y_test, images_per_epoch=-1):
@@ -73,7 +80,7 @@ class NeptuneCallback(Callback):
                 image_per_epoch += 1
 
                 ctx.job.channel_send('false_predictions', neptune.Image(
-                    name='[{}] pred: {} true: {}'.format(self.epoch_id, categories[prediction], categories[actual]),
+                    name='[{}] {} X {} V'.format(self.epoch_id, categories[prediction], categories[actual]),
                     description="\n".join([
                         "{:5.1f}% {} {}".format(100 * score, categories[i], "!!!" if i == actual else "")
                         for i, score in enumerate(scores[index])]),
