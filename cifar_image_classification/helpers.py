@@ -35,9 +35,10 @@ def array_2d_to_image(array, autorescale=True):
     return Image.fromarray(array)
 
 def model_summary(model):
+    print("Model created successfully.")
     print(model.summary())
-    ctx.job.channel_send('n_layers', len(model.layers))
-    ctx.job.channel_send('n_parameters', model.count_params())
+    ctx.channel_send('n_layers', len(model.layers))
+    ctx.channel_send('n_parameters', model.count_params())
 
 categories = [
     'airplane',
@@ -62,10 +63,10 @@ class NeptuneCallback(Callback):
         self.epoch_id += 1
 
         # logging numeric channels
-        ctx.job.channel_send('Log-loss training', self.epoch_id, logs['loss'])
-        ctx.job.channel_send('Log-loss validation', self.epoch_id, logs['val_loss'])
-        ctx.job.channel_send('Accuracy training', self.epoch_id, logs['acc'])
-        ctx.job.channel_send('Accuracy validation', self.epoch_id, logs['val_acc'])
+        ctx.channel_send('Log-loss training', self.epoch_id, logs['loss'])
+        ctx.channel_send('Log-loss validation', self.epoch_id, logs['val_loss'])
+        ctx.channel_send('Accuracy training', self.epoch_id, logs['acc'])
+        ctx.channel_send('Accuracy validation', self.epoch_id, logs['val_acc'])
 
         # Predict the digits for images of the test set.
         validation_predictions = self.model.predict_classes(self.x_test)
@@ -79,7 +80,7 @@ class NeptuneCallback(Callback):
                     break
                 image_per_epoch += 1
 
-                ctx.job.channel_send('false_predictions', neptune.Image(
+                ctx.channel_send('false_predictions', neptune.Image(
                     name='[{}] {} X {} V'.format(self.epoch_id, categories[prediction], categories[actual]),
                     description="\n".join([
                         "{:5.1f}% {} {}".format(100 * score, categories[i], "!!!" if i == actual else "")
