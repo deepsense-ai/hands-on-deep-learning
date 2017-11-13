@@ -4,7 +4,7 @@ from helpers import NeptuneCallback, load_cifar10, model_summary
 from deepsense import neptune
 
 ctx = neptune.Context()
-ctx.job.tags.append('logistic-regression')
+ctx.tags.append('logistic-regression')
 
 # create neural network architecture
 model = Sequential()

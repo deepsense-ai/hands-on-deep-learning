@@ -5,8 +5,8 @@ from helpers import NeptuneCallback, load_cifar10, model_summary
 from deepsense import neptune
 
 ctx = neptune.Context()
-ctx.job.tags.append('cnn')
-ctx.job.tags.append('pkaur')
+ctx.tags.append('cnn')
+ctx.tags.append('pkaur')
 
 # create neural network architecture
 
