@@ -7,6 +7,9 @@ from deepsense import neptune
 ctx = neptune.Context()
 ctx.tags.append('convolutional')
 encoding_dim = ctx.params['encoding_dim']
+epochs = ctx.params['epochs']
+batch_size = ctx.params['batch_size']
+optimizer = ctx.params['optimizer']
 
 c_bottleneck = encoding_dim // 16
 
@@ -29,7 +32,7 @@ x = Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
 decoded = x
 
 autoencoder = Model(input_img, decoded)
-autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
+autoencoder.compile(optimizer=optimizer, loss='binary_crossentropy')
 model_summary(autoencoder)
 
 # loading data
@@ -37,8 +40,8 @@ model_summary(autoencoder)
 
 # training
 autoencoder.fit(x_train, x_train,
-          epochs=50,
-          batch_size=256,
+          epochs=epochs,
+          batch_size=batch_size,
           validation_data=(x_test, x_test),
           verbose=2,
           callbacks=[NeptuneCallback(x_test[:5])])

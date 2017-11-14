@@ -8,3 +8,6 @@ parameters:
   encoding_dim:
     value: 256
     description: "Length on encoding vector."
+  epochs: 50
+  batch_size: 256
+  optimizer: "adam"

@@ -6,6 +6,9 @@ from deepsense import neptune
 ctx = neptune.Context()
 ctx.tags.append('deeper')
 encoding_dim = ctx.params['encoding_dim']
+epochs = ctx.params['epochs']
+batch_size = ctx.params['batch_size']
+optimizer = ctx.params['optimizer']
 
 # 32 * 32 * 3 == 3072
 # this is our input placeholder
@@ -20,7 +23,7 @@ x = Dense(1024, activation='relu')(x)
 decoded = Dense(32 * 32 * 3, activation='sigmoid')(x)
 
 autoencoder = Model(input_img, decoded)
-autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
+autoencoder.compile(optimizer=optimizer, loss='binary_crossentropy')
 model_summary(autoencoder)
 
 # loading data
@@ -30,8 +33,8 @@ x_test = x_test.reshape(-1, 32 * 32 * 3)
 
 # training
 autoencoder.fit(x_train, x_train,
-          epochs=50,
-          batch_size=256,
+          epochs=epochs,
+          batch_size=batch_size,
           validation_data=(x_test, x_test),
           verbose=2,
           callbacks=[NeptuneCallback(x_test[:5])])
