@@ -56,10 +56,10 @@ class NeptuneCallback(Callback):
         autoencoded = self.model.predict(self.x_test)
 
         # for x, score in zip(autoencoded, scores):
-        for i, x in enumerate(x_autoencoded):
+        for i, x in enumerate(autoencoded):
             x0 = self.x_test[i:i+1]
-            score = self.model.evaluate(x0, x0, batch_size=1, verbose=0)[0]
+            score = self.model.evaluate(x0, x0, batch_size=1, verbose=0)
             ctx.channel_send('autoencoded', neptune.Image(
-                name="[{}] {:.2f}".format(self.epoch_id, score['loss']),
-                description="Epoch: {}\nLoss: {:.2f}".format(self.epoch_id, score['loss']),
+                name="[{}] {:.2f}".format(self.epoch_id, score),
+                description="Epoch: {}\nLoss: {:.2f}".format(self.epoch_id, score),
                 data=array_2d_to_image(x.reshape(32, 32, 3))))

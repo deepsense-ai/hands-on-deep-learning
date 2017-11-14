@@ -4,13 +4,19 @@ from helpers import NeptuneCallback, load_cifar10, model_summary
 from deepsense import neptune
 
 ctx = neptune.Context()
-ctx.tags.append('shallow')
+ctx.tags.append('deeper')
 encoding_dim = ctx.params['encoding_dim']
 
+# 32 * 32 * 3 == 3072
+# this is our input placeholder
 input_img = Input(shape=(32 * 32 * 3,))
 x = input_img
-encoded = Dense(encoding_dim, activation='relu')(x)
-x = encoded
+x = Dense(1024, activation='relu')(x)
+x = Dense(512, activation='relu')(x)
+x = Dense(encoding_dim, activation='relu')(x)
+encoded = x
+x = Dense(512, activation='relu')(x)
+x = Dense(1024, activation='relu')(x)
 decoded = Dense(32 * 32 * 3, activation='sigmoid')(x)
 
 # this model maps an input to its reconstruction

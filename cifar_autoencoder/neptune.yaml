@@ -4,5 +4,7 @@ name: Autoencoder on CIFAR10
 description: From blog post.
 tags: [cifar10-ae]
 
-exclude:
-  - aux
+parameters:
+  encoding_dim:
+    value: 256
+    description: "Length on encoding vector."
