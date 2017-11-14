@@ -21,7 +21,7 @@ decoded = Dense(32 * 32 * 3, activation='sigmoid')(x)
 
 autoencoder = Model(input_img, decoded)
 autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
-model_summary(model)
+model_summary(autoencoder)
 
 # loading data
 (x_train, y_train), (x_test, y_test) = load_cifar10()
