@@ -13,10 +13,9 @@ encoded = Dense(encoding_dim, activation='relu')(x)
 x = encoded
 decoded = Dense(32 * 32 * 3, activation='sigmoid')(x)
 
-# this model maps an input to its reconstruction
 autoencoder = Model(input_img, decoded)
-
 autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
+model_summary(model)
 
 # loading data
 (x_train, y_train), (x_test, y_test) = load_cifar10()
