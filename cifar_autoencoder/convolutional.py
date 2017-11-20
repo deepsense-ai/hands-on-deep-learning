@@ -11,7 +11,7 @@ epochs = ctx.params['epochs']
 batch_size = ctx.params['batch_size']
 optimizer = ctx.params['optimizer']
 
-c_bottleneck = encoding_dim // 16
+c_bottleneck = encoding_dim // 4
 
 input_img = Input(shape=(32, 32, 3))
 x = input_img
@@ -19,14 +19,18 @@ x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
 x = MaxPool2D((2, 2), padding='same')(x)
 x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
 x = MaxPool2D((2, 2), padding='same')(x)
+x = Conv2D(16, (3, 3), activation='relu', padding='same')(x)
+x = MaxPool2D((2, 2), padding='same')(x)
 x = Conv2D(c_bottleneck, (3, 3), activation='relu', padding='same')(x)
 x = MaxPool2D((2, 2), padding='same')(x)
 encoded = x
 x = Conv2D(c_bottleneck, (3, 3), activation='relu', padding='same')(x)
 x = UpSampling2D((2, 2))(x)
-x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
+x = Conv2D(16, (3, 3), activation='relu', padding='same')(x)
 x = UpSampling2D((2, 2))(x)
 x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+x = UpSampling2D((2, 2))(x)
+x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
 x = UpSampling2D((2, 2))(x)
 x = Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
 decoded = x
